@@ -87,8 +87,10 @@ const customerEquip = [
     { equipName: "Digital Humidity Controller", procedureNo: "W-09-28" },
     { equipName: "DIGITAL HUMIDITY RECORDER", procedureNo: "W-09-28" },
     { equipName: "Digital Hygrometer", procedureNo: "W-09-25" },
+    { equipName: "Hygrometer", procedureNo: "W-09-25" },
     { equipName: "Digital Micro Meter", procedureNo: "W-09-23" },
     { equipName: "Digital Multimeter", procedureNo: "W-09-85" },
+    { equipName: "Multimeter", procedureNo: "W-09-85" },
     { equipName: "Digital Phase Indicator", procedureNo: "W-09-57" },
     { equipName: "Digital Pressure Gauge", procedureNo: "W-09-23" },
     { equipName: "Digital Stop Watch", procedureNo: "W-09-29" },
@@ -96,8 +98,10 @@ const customerEquip = [
         equipName: "Digital Temperature & Humidity Data Logger",
         procedureNo: "W-09-25",
     },
+    { equipName: "Data Logger", procedureNo: "W-09-25" },
     { equipName: "Digital Temperature Controller", procedureNo: "W-09-25" },
     { equipName: "Digital Temperature Indicator", procedureNo: "W-09-25" },
+    { equipName: "Temperature Indicator", procedureNo: "W-09-25" },
     { equipName: "Digital Thermo Hygrometer", procedureNo: "W-09-25" },
     { equipName: "Digital Thermometer", procedureNo: "W-09-25" },
     { equipName: "Digital Torque Tester", procedureNo: "W-09-42" },
@@ -128,6 +132,7 @@ const customerEquip = [
     { equipName: "Flame Photo Meter", procedureNo: "W-09-95" },
     { equipName: "Flim/Coating Thickness Gauge", procedureNo: "W-09-88" },
     { equipName: "Flow Meter", procedureNo: "W-09-57" },
+    { equipName: "Flow Transmitter", procedureNo: "W-09-57" },
     { equipName: "Freezer", procedureNo: "W-09-25" },
     { equipName: "Friability Tester", procedureNo: "W-09-63" },
     { equipName: "Friability Testers", procedureNo: "W-09-89" },
@@ -177,6 +182,10 @@ const customerEquip = [
     { equipName: "Hydraulic Motor Pump", procedureNo: "W-09-23" },
     {
         equipName: "Hydraulic Oil Flow Meter with Display",
+        procedureNo: "W-09-57",
+    },
+    {
+        equipName: "Diesel Flow Meter",
         procedureNo: "W-09-57",
     },
     { equipName: "Hydraulic Pump", procedureNo: "W-09-23" },
@@ -297,6 +306,7 @@ const customerEquip = [
     { equipName: "Shrinkage Template", procedureNo: "W-09-42" },
     { equipName: "Somex Degasser", procedureNo: "W-09-57" },
     { equipName: "Sound Level Meter", procedureNo: "W-09-93" },
+    { equipName: "Sound Meter", procedureNo: "W-09-93" },
     { equipName: "Spectrophotometer", procedureNo: "W-09-95" },
     { equipName: "SPEED METER", procedureNo: "W-09-27" },
     { equipName: "Speedy Moisture Meter", procedureNo: "W-09-88" },
@@ -356,7 +366,10 @@ const customerEquip = [
         equipName: "Tupesa Machine (Regulator Pressure Gauge)",
         procedureNo: "W-09-23",
     },
-    { equipName: "Tupesa Machine (Temperature Sensor)", procedureNo: "W-09-25" },
+    {
+        equipName: "Tupesa Machine (Temperature Sensor)",
+        procedureNo: "W-09-25",
+    },
     { equipName: "Turbidity Meter", procedureNo: "W-09-52" },
     { equipName: "UltraSonic Bath 2.5L", procedureNo: "W-09-25" },
     { equipName: "Ultrasonic Flow Meter", procedureNo: "W-09-88" },
@@ -411,6 +424,7 @@ const getProcedureNo = (equipName) => {
         if (equipment) {
             return equipment.procedureNo;
         } else {
+            console.error(equipName);
             throw new Error(
                 `Procedure number not found for equipment ${equipName}`
             );

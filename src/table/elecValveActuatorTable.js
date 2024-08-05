@@ -9,29 +9,36 @@ import {
     VerticalAlign,
 } from "docx";
 
-const simleTable = ({ paragraphs, maxNumber, mode }) => {
-    const generateRandomNumbers = () => {
-        let randomNumbers = [];
-        for (let i = 1; i <= 5; i++) {
-            let randomNumber = (maxNumber / 5) * i;
-            if (maxNumber > 5) {
-                randomNumber = Math.round(randomNumber);
-                randomNumber += ".0";
-            } else {
-                randomNumber = randomNumber.toFixed(1);
+const elecValveActuatorTable = ({ paragraphs, maxNumber, mode }) => {
+    let splitMaxNum = maxNumber.split(" | ");
+    let percentage = +splitMaxNum[0];
+    let volt = +splitMaxNum[1];
+    const generateRandomNumbers = (max, eq) => {
+        let results = [];
+        let decimal = false;
+        if (eq === "V") {
+            decimal = true;
+        }
+        for (let i = 1; i <= 4; i++) {
+            let number = (max / 4) * i;
+            number = Math.round(number);
+            if (decimal) {
+                number += ".0";
             }
-            if (i < 5) {
-                randomNumbers.push(randomNumber);
+            if (i < 4) {
+                results.push(number.toString());
             } else {
-                if (maxNumber % 1 === 0) {
-                    maxNumber += ".0";
+                if (decimal) {
+                    max += ".0";
                 }
-                randomNumbers.push(maxNumber);
+                results.push(max.toString());
             }
         }
-        return randomNumbers;
+        return results;
     };
-    let numbers = generateRandomNumbers().map((num) => num.toString());
+
+    let percentageResult = generateRandomNumbers(percentage, "%");
+    let voltResult = generateRandomNumbers(volt, "V");
     paragraphs.push(
         new Table({
             columnWidths: [2420, 2160, 3024, 1606, 1606],
@@ -177,14 +184,14 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: mode,
+                                            text: mode.split(" | ")[0],
                                             font: "Calibri",
                                         }),
                                     ],
                                     alignment: AlignmentType.CENTER,
                                 }),
                             ],
-                            rowSpan: 5,
+                            rowSpan: 4,
                             verticalAlign: VerticalAlign.CENTER,
                         }),
                         new TableCell({
@@ -196,7 +203,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[0],
+                                            text: percentageResult[0],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -215,7 +222,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[0],
+                                            text: percentageResult[0],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -234,7 +241,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: "0",
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -277,7 +284,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[1],
+                                            text: percentageResult[1],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -296,7 +303,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[1],
+                                            text: percentageResult[1],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -315,7 +322,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: "0",
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -358,7 +365,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[2],
+                                            text: percentageResult[2],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -377,7 +384,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[2],
+                                            text: percentageResult[2],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -396,7 +403,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: "0",
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -439,7 +446,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[3],
+                                            text: percentageResult[3],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -458,7 +465,121 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[3],
+                                            text: percentageResult[3],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "0",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "Pass",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------EMPTY------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2420,
+                                type: WidthType.DXA,
+                            },
+                            children: [new Paragraph("")],
+                            columnSpan: 5,
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------'1'-'1'-'1'------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2420,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: mode.split(" | ")[1],
+                                            font: "Calibri",
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            rowSpan: 4,
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 2160,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[0],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 3024,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[0],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -508,7 +629,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                         }),
                     ],
                 }),
-                // < --------------------------5-5-5------------------------------ >
+                // < --------------------------'2'-'2'-'2'------------------------------ >
                 new TableRow({
                     children: [
                         new TableCell({
@@ -520,7 +641,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[4],
+                                            text: voltResult[1],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -539,7 +660,169 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[4],
+                                            text: voltResult[1],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "0.0",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "Pass",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------'3'-'3'-'3'------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2160,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[2],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 3024,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[2],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "0.0",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "Pass",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------'4'-'4'-'4'------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2160,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[3],
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 3024,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: voltResult[3],
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -593,4 +876,4 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
         })
     );
 };
-export default simleTable;
+export default elecValveActuatorTable;

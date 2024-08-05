@@ -63,7 +63,7 @@ const masterEquip = [
     },
     {
         _id: "0427e8b6-60ef-4f6e-9586-66dbc552fb8a",
-        equipName: "Buffer solution pH 10.01 � 0.01 (25�C)",
+        equipName: "Buffer solution pH 10.01 ± 0.01 (25°C)",
         model: "HI7010/1L",
         serial: "N/A",
         idNo: "Hanna Instrument",
@@ -73,7 +73,7 @@ const masterEquip = [
     },
     {
         _id: "a893e4d1-45b9-482f-917d-d5a1b9271682",
-        equipName: "Buffer solution pH 14.01 � 0.01 (25�C)",
+        equipName: "Buffer solution pH 14.01 ± 0.01 (25°C)",
         model: "HI7010/1L",
         serial: "N/A",
         idNo: "Hanna Instrument",
@@ -83,7 +83,7 @@ const masterEquip = [
     },
     {
         _id: "531583dd-0fdc-40e2-8019-4a8bd1446c72",
-        equipName: "Buffer solution pH 4.01� 0.01 (25�C)",
+        equipName: "Buffer solution pH 4.01 ± 0.01 (25°C)",
         model: "HI7004/1L",
         serial: "32095.297",
         idNo: "Hanna Instruments",
@@ -93,7 +93,7 @@ const masterEquip = [
     },
     {
         _id: "220f3be6-defa-450e-a915-580211731095",
-        equipName: "Buffer solution pH 7.01 � 0.01 (25�C)",
+        equipName: "Buffer solution pH 7.01 ± 0.01 (25°C)",
         model: "HI7007/1L",
         serial: "32096.291",
         idNo: "Hanna Instruments",
@@ -115,7 +115,7 @@ const masterEquip = [
         _id: "d078cf85-7295-4730-969e-fcd1e5871e7e",
         equipName: "Conductivity Standard Solution",
         model: "Hanna Instruments",
-        serial: "1413�5 �S/cm@25 �C",
+        serial: "1413�5 �S/cm@25 °C",
         idNo: "HI7031L",
         trac: "7675",
         calDate: "23-Oct-2023",
@@ -140,6 +140,16 @@ const masterEquip = [
         trac: "CL-1608(M-229)2023",
         calDate: "23-Oct-2023",
         calDueDate: "23-Oct-2024",
+    },
+    {
+        _id: "fgs6d929-c502-4a76-01bf-1d5d0e393sx9",
+        equipName: "Sindh Weights & Measures",
+        model: "CHALLAN No. TT-5159",
+        serial: "R-K/236",
+        idNo: "-",
+        trac: "Sindh Govt. License",
+        calDate: "01-Jul-2023",
+        calDueDate: "30-Jun-2024",
     },
     {
         _id: "2930649a-9243-4742-98d1-492c0c493861",
@@ -393,7 +403,7 @@ const masterEquip = [
     },
     {
         _id: "920298cb-2618-4acd-8d94-e2bae0841a6a",
-        equipName: "Digital thermometer",
+        equipName: "Digital Thermometer",
         model: "MS6512(MASTECH)",
         serial: "MBJF048393",
         idNo: "12007",
@@ -403,7 +413,7 @@ const masterEquip = [
     },
     {
         _id: "579c628e-3812-4d55-b2fb-6dcd96ed2c45",
-        equipName: "Digital torque Tester",
+        equipName: "Digital Torque Tester",
         model: "Norbar",
         serial: "43218",
         idNo: "DCA-24",
@@ -894,7 +904,7 @@ const masterEquip = [
     {
         _id: "e91fbbf5-69e2-47f5-963e-06d1f900387a",
         equipName: "TDS Standard Solution",
-        model: "1382 �5  ppm @ 25 �C",
+        model: "1382 �5  ppm @ 25 °C",
         serial: "HI 7032L",
         idNo: "Hanna",
         trac: "Lot: 1920",
@@ -1003,39 +1013,216 @@ const masterEquip = [
     },
 ];
 
-masterEquip.findById = (id) => {
+const findMasterById = (id) => {
     return masterEquip.find((mEq) => mEq._id === id) || "---";
+};
+
+const getPressureMaster = (mode, meta, maxNum) => {
+    switch (mode) {
+        case "bar":
+        case "kgcm²":
+        case "kg/cm":
+        case "kg/cm²":
+        case "kgfcm":
+        case "kgf/cm²":
+            if (maxNum <= 20) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 20) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "psi":
+            if (maxNum <= 300) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 300) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "mbar":
+            if (maxNum <= 20000) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 20000) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "mpa":
+            if (maxNum <= 2) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 2) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "kpa":
+            if (maxNum <= 2000) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 2000) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "pascal":
+        case "pa":
+            if (maxNum <= 4000000) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 4000000) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "inh₂o":
+            if (maxNum <= 8000) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 8000) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "inhg":
+            if (maxNum <= 590) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 590) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+        case "mmhg":
+            if (maxNum <= 15000) {
+                meta.master.push(
+                    findMasterById("578e907f-306b-4539-9c69-a37504a01c99")
+                );
+            }
+            if (maxNum > 15000) {
+                meta.master.push(
+                    findMasterById("6199b799-b8f5-4995-8aea-7b236d99e938")
+                );
+            }
+            break;
+    }
 };
 
 const getMaster = (equip, maxNum, mode) => {
     equip = equip.toLowerCase();
-    maxNum = +maxNum;
+    if (!equip.includes("hygrometer") && !equip.includes("data logger")) {
+        maxNum = +maxNum;
+    }
     mode = mode.toLowerCase().split(" ")[2];
-    let meta = { master: null, condition: {} };
+    let meta = { master: [], condition: {} };
     switch (equip) {
+        // Digital Anemometer
+        case "anemometer":
+            meta.master.push(
+                findMasterById("490b191f-85b3-46a5-98c5-51cdcec92181")
+            );
+            meta.condition.temp = "25";
+            meta.condition.hum = "45";
+            break;
+
         // Bath
         case "temperature gauge":
         case "temperature sensor":
         case "temperature gun":
+        case "temperature indicator":
+        case "temperature indicator controller":
         case "ir gun":
+        case "infra red sensor":
+        case "infrared sensor":
+        case "infra red gun":
         case "infrared gun":
-            meta.master = masterEquip.findById(
-                "ea319ad8-294c-4905-8f3d-9fc1a0eb04d6"
+        case "furnace":
+        case "incubator":
+            meta.master.push(
+                findMasterById("ea319ad8-294c-4905-8f3d-9fc1a0eb04d6")
             );
-            // meta.condition.procedure = "W-09-68";
             meta.condition.temp = "23";
             meta.condition.hum = "46";
             break;
 
         // Thermometer
         case "temperature controller":
-        case "thermometer":
-            meta.master = masterEquip.findById(
-                "920298cb-2618-4acd-8d94-e2bae0841a6a"
+        case "oven":
+        case "dry oven":
+            meta.master.push(
+                findMasterById("920298cb-2618-4acd-8d94-e2bae0841a6a")
             );
-            // meta.condition.procedure = "W-09-82";
             meta.condition.temp = "24";
             meta.condition.hum = "47";
+            break;
+
+        // Thermometer || Bath
+        case "thermometer":
+            if (
+                (mode === "°F" && maxNum < 110) ||
+                (mode === "°C" && maxNum <= 45)
+            ) {
+                // Thermometer
+                meta.master.push(
+                    findMasterById("920298cb-2618-4acd-8d94-e2bae0841a6a")
+                );
+            } else {
+                // Bath
+                meta.master.push(
+                    findMasterById("ea319ad8-294c-4905-8f3d-9fc1a0eb04d6")
+                );
+            }
+            meta.condition.temp = "24";
+            meta.condition.hum = "47";
+            break;
+
+        // Conductivity
+        case "tds meter":
+        case "conductivity meter":
+            meta.master.push(
+                findMasterById("d078cf85-7295-4730-969e-fcd1e5871e7e")
+            );
+            meta.condition.temp = "23";
+            meta.condition.hum = "46";
+            break;
+
+        // Conductivity
+        case "ph meter":
+            meta.master.push(
+                findMasterById("531583dd-0fdc-40e2-8019-4a8bd1446c72"),
+                findMasterById("220f3be6-defa-450e-a915-580211731095"),
+                findMasterById("0427e8b6-60ef-4f6e-9586-66dbc552fb8a")
+            );
+            meta.condition.temp = "23";
+            meta.condition.hum = "46";
             break;
 
         // Temp & Hum Meter
@@ -1045,22 +1232,43 @@ const getMaster = (equip, maxNum, mode) => {
         case "data logger":
         case "humidity meter":
         case "humidity sensor":
-            meta.master = masterEquip.findById(
-                "1941d7d3-7de3-4385-93ec-082d0969ec40"
+            meta.master.push(
+                findMasterById("1941d7d3-7de3-4385-93ec-082d0969ec40")
             );
-            // meta.condition.procedure = "W-09-29";
             meta.condition.temp = "24";
             meta.condition.hum = "42";
             break;
 
         // Dead Weight Box
-        case "weighing scale":
         case "weight indicator":
         case "digital weight indicator":
-            meta.master = masterEquip.findById(
-                "fac6d929-c502-4a76-98bf-1d5d0e393de9"
+            meta.master.push(
+                findMasterById("fac6d929-c502-4a76-98bf-1d5d0e393de9")
             );
-            // meta.condition.procedure = "W-09-43";
+            meta.condition.temp = "21";
+            meta.condition.hum = "50";
+            break;
+
+        // Sindh Weights
+        case "weighing scale":
+            if (mode == "kg" && maxNum >= 50) {
+                meta.master.push(
+                    findMasterById("fgs6d929-c502-4a76-01bf-1d5d0e393sx9")
+                );
+            } else {
+                meta.master.push(
+                    findMasterById("fac6d929-c502-4a76-98bf-1d5d0e393de9")
+                );
+            }
+            meta.condition.temp = "21";
+            meta.condition.hum = "50";
+            break;
+
+        // Sang Korea
+        case "dead weight":
+            meta.master.push(
+                findMasterById("778f3933-e4fb-4d36-ade5-edd8afe47ad3")
+            );
             meta.condition.temp = "21";
             meta.condition.hum = "50";
             break;
@@ -1068,62 +1276,90 @@ const getMaster = (equip, maxNum, mode) => {
         // Measuring Tape
         case "measuring tape":
         case "measuring scale":
-            meta.master = masterEquip.findById(
-                "854bdd56-b837-48b8-b4bc-8773fb4faa3f"
+            meta.master.push(
+                findMasterById("854bdd56-b837-48b8-b4bc-8773fb4faa3f")
             );
-            // meta.condition.procedure = "W-09-44";
             meta.condition.temp = "23";
             meta.condition.hum = "46";
             break;
 
         // Measuring Cylinder
+        case "volumetric cylinder":
         case "measuring cylinder":
-            meta.master = masterEquip.findById(
-                "938e8680-1735-4acf-9172-21b66c9e5fa7"
+            meta.master.push(
+                findMasterById("938e8680-1735-4acf-9172-21b66c9e5fa7")
             );
-            // meta.condition.procedure = "W-09-65";
             meta.condition.temp = "24";
             meta.condition.hum = "47";
             break;
 
+        // Beaker
+        case "jug":
+        case "beaker":
+        case "beaker jug":
+            meta.master.push(
+                findMasterById("00801269-9afc-4533-ac52-f0e8b186684b")
+            );
+            meta.condition.temp = "25";
+            meta.condition.hum = "55";
+            break;
+
         // Laser Distance Meter
         case "yard meter":
-            meta.master = masterEquip.findById(
-                "da95852c-5811-4cde-8c39-57810773791c"
+            meta.master.push(
+                findMasterById("da95852c-5811-4cde-8c39-57810773791c")
             );
-            // meta.condition.procedure = "W-09-44";
             meta.condition.temp = "23";
             meta.condition.hum = "46";
             break;
 
         // Lux Meter
         case "lux meter":
-            meta.master = masterEquip.findById(
-                "fa555cdd-201d-48a1-bc68-1c9128536674"
+            meta.master.push(
+                findMasterById("fa555cdd-201d-48a1-bc68-1c9128536674")
             );
-            // meta.condition.procedure = "W-09-64";
             meta.condition.temp = "23";
             meta.condition.hum = "50";
             break;
 
-        // Vernier Caliper
+        // Sound Level Meter
+        case "sound meter":
+            meta.master.push(
+                findMasterById("e2ee08fa-620a-4565-973f-7895db4c58d8")
+            );
+            meta.condition.temp = "23";
+            meta.condition.hum = "50";
+            break;
+
+        // Gauge Block Set
+        case "micrometer":
         case "vernier caliper":
         case "digital vernier caliper":
-            meta.master = masterEquip.findById(
-                "2334590b-ad25-43cd-82ed-c006fdbb29ab"
+            meta.master.push(
+                findMasterById("d47f08bd-ca1f-4a40-a2c8-915b8ff23a93")
             );
-            // meta.condition.procedure = "W-09-42";
             meta.condition.temp = "23";
+            meta.condition.hum = "45";
+            break;
+
+        // Vernier + Gauge Block
+        case "fiber optic sensor":
+            meta.master.push(
+                findMasterById("2334590b-ad25-43cd-82ed-c006fdbb29ab"),
+                findMasterById("d47f08bd-ca1f-4a40-a2c8-915b8ff23a93")
+            );
+            meta.condition.temp = "25";
             meta.condition.hum = "45";
             break;
 
         // Tachometer
         case "rpm":
         case "rpm meter":
-            meta.master = masterEquip.findById(
-                "53a284ed-cfb5-46e6-bc6f-8782cdf21371"
+        case "tachometer":
+        case "digital tachometer":
+            meta.master.push(
+                findMasterById("53a284ed-cfb5-46e6-bc6f-8782cdf21371")
             );
-            // meta.condition.procedure = "W-09-27";
             meta.condition.temp = "24";
             meta.condition.hum = "49";
             break;
@@ -1131,107 +1367,110 @@ const getMaster = (equip, maxNum, mode) => {
         // Stop Watch
         case "timer":
         case "stop watch":
-            meta.master = masterEquip.findById(
-                "82845449-6e20-4c69-85be-865b46b873bb"
+        case "digital stop watch":
+            meta.master.push(
+                findMasterById("82845449-6e20-4c69-85be-865b46b873bb")
             );
-            // meta.condition.procedure = "W-09-60";
             meta.condition.temp = "20";
             meta.condition.hum = "52";
             break;
 
-        // Flow Meter
-        case "flow meter":
-        case "ultrasonic flow meter":
+        // Suto S401
         case "air flow meter":
         case "gas flow meter":
-        case "steam flow meter":
-        case "water flow meter":
+            meta.master.push(
+                findMasterById("b6f95491-2028-4789-88d3-a4ac0506db99")
+            );
+            meta.condition.temp = "23";
+            meta.condition.hum = "46";
+            break;
+
+        // Ultrasonic Flow Meter
+        case "flow transmitter":
+        case "flow meter":
         case "oil flow meter":
-            meta.master = masterEquip.findById(
-                "eae31c67-c520-4cf8-a017-552c589fcbc6"
+        case "diesel flow meter":
+        case "water flow meter":
+        case "ultrasonic flow meter":
+            meta.master.push(
+                findMasterById("eae31c67-c520-4cf8-a017-552c589fcbc6")
+            );
+            meta.condition.temp = "26";
+            meta.condition.hum = "49";
+            break;
+
+        // Hart Communicator
+        case "steam flow meter":
+            meta.master.push(
+                findMasterById("452aead8-ae23-49ea-81a9-47a6e4bcf1da")
             );
             meta.condition.temp = "26";
             meta.condition.hum = "49";
             break;
 
         // Pressure Gauge
+        case "leak tester apparatus":
         case "pressure gauge":
+        case "compound gauge":
+        case "vacuum gauge":
         case "magnehelic gauge":
-        case "pressure transmitter":
         case "pressure switch":
+        case "differential pressure switch":
+        case "pressure transmitter":
         case "pressure safety valve":
-            switch (mode) {
-                case "bar":
-                case "kgcm²":
-                case "kg/cm²":
-                case "kgfcm²":
-                case "kgf/cm²":
-                    if (maxNum <= 20) {
-                        meta.master = masterEquip.findById(
-                            "578e907f-306b-4539-9c69-a37504a01c99"
-                        );
-                    }
-                    if (maxNum >= 21) {
-                        meta.master = masterEquip.findById(
-                            "6199b799-b8f5-4995-8aea-7b236d99e938"
-                        );
-                    }
-                    // if (maxNum > 40 && maxNum <= 400) {
-                    //     meta.master = masterEquip.findById(
-                    //         "4ce76759-ea8c-4147-8869-f252e041d3cb"
-                    //     );
-                    // }
-                    // if (maxNum > 401 && maxNum <= 700) {
-                    //     meta.master = masterEquip.findById(
-                    //         "2fbaff06-8ee2-408c-a2df-b2c6cfd4df3e"
-                    //     );
-                    // }
-                    break;
-                case "psi":
-                    if (maxNum <= 290) {
-                        meta.master = masterEquip.findById(
-                            "578e907f-306b-4539-9c69-a37504a01c99"
-                        );
-                    }
-                    if (maxNum > 290) {
-                        meta.master = masterEquip.findById(
-                            "6199b799-b8f5-4995-8aea-7b236d99e938"
-                        );
-                    }
-                    break;
-                case "mbar":
-                    if (maxNum <= 20000) {
-                        meta.master = masterEquip.findById(
-                            "578e907f-306b-4539-9c69-a37504a01c99"
-                        );
-                    }
-                    if (maxNum > 20000) {
-                        meta.master = masterEquip.findById(
-                            "6199b799-b8f5-4995-8aea-7b236d99e938"
-                        );
-                    }
-                    break;
-                case "mpa":
-                    if (maxNum <= 2) {
-                        meta.master = masterEquip.findById(
-                            "578e907f-306b-4539-9c69-a37504a01c99"
-                        );
-                    }
-                    if (maxNum > 2) {
-                        meta.master = masterEquip.findById(
-                            "6199b799-b8f5-4995-8aea-7b236d99e938"
-                        );
-                    }
-                    break;
-            }
-            // meta.condition.procedure = "W-09-23";
+            getPressureMaster(mode, meta, maxNum);
             meta.condition.temp = "23";
             meta.condition.hum = "50";
             break;
+
+        // Multimeter
+        case "ampere meter":
+        case "volt meter":
+        case "volt & ampere meter":
+            meta.master.push(
+                findMasterById("27a4cb05-b7f1-43c3-a94b-80964dcb28d5")
+            );
+            meta.condition.temp = "25";
+            meta.condition.hum = "55";
+            break;
+
+        // Clamp Meter + Process Calibrator
+        case "clamp meter":
+        case "digital clamp meter":
+            meta.master.push(
+                findMasterById("fa51a8dc-0765-4beb-85eb-ee11228f8a1e"),
+                findMasterById("956b2fb6-e7db-4bf9-924a-bcdfa72bb020")
+            );
+            meta.condition.temp = "25";
+            meta.condition.hum = "45";
+            break;
+
+        // Process Calibrator
+        case "water bath":
+        case "multimeter":
+        case "digital multimeter":
+        case "electric valve actuator":
+            meta.master.push(
+                findMasterById("956b2fb6-e7db-4bf9-924a-bcdfa72bb020")
+            );
+            meta.condition.temp = "25";
+            meta.condition.hum = "45";
+            break;
+
+        // PG + Digital Manometer
+        case "micro manometer":
+            meta.master.push(
+                findMasterById("3648b0b7-5577-49e2-b982-e4b8a6795b80")
+            );
+            getPressureMaster(mode, meta, maxNum);
+            meta.condition.temp = "25";
+            meta.condition.hum = "55";
+            break;
     }
+
     const procedure = getProcedureNo(equip);
     meta.condition.procedure = procedure;
-    if (!meta.master) {
+    if (!meta.master.length) {
         console.log({ equip, maxNum, mode });
     }
     return meta;

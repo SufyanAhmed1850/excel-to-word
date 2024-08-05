@@ -2,6 +2,7 @@ import XlsxPopulate from "xlsx-populate";
 import { format } from "date-fns";
 
 const pathToExcellFile = "./dist/list.xlsx";
+const timeZoneOffset = new Date().getTimezoneOffset() * 60000;
 
 const readExcelFile = async () => {
     try {
@@ -10,6 +11,24 @@ const readExcelFile = async () => {
         const data = worksheet.usedRange().value();
         const headers = data.shift();
         const certs = data.map((row) => {
+            const maxRead = row[headers.indexOf("MaxRead")].toString();
+            // console.log(maxRead);
+            const dueDate = () => {
+                if (row[headers.indexOf("CalDue")] !== "OUT OF ORDER") {
+                    return format(
+                        new Date(
+                            XlsxPopulate.numberToDate(
+                                row[headers.indexOf("CalDue")]
+                            ) - timeZoneOffset
+                        )
+                            .toISOString()
+                            .split("T")[0],
+                        "dd-MMM-yyyy"
+                    );
+                } else {
+                    return row[headers.indexOf("CalDue")];
+                }
+            };
             return {
                 customer: row[headers.indexOf("Customer")],
                 equipment: row[headers.indexOf("Equipment")],
@@ -21,23 +40,22 @@ const readExcelFile = async () => {
                 tolerance: row[headers.indexOf("Tolerance")],
                 location: row[headers.indexOf("Location")],
                 mode: row[headers.indexOf("Mode")],
-                maxRead: parseFloat(row[headers.indexOf("MaxRead")]),
+                maxRead: maxRead,
                 freq: row[headers.indexOf("Freq")],
                 calDate: format(
-                    XlsxPopulate.numberToDate(row[headers.indexOf("CalDate")])
+                    new Date(
+                        XlsxPopulate.numberToDate(
+                            row[headers.indexOf("CalDate")]
+                        ) - timeZoneOffset
+                    )
                         .toISOString()
                         .split("T")[0],
                     "dd-MMM-yyyy"
                 ),
-                calDue: format(
-                    XlsxPopulate.numberToDate(row[headers.indexOf("CalDue")])
-                        .toISOString()
-                        .split("T")[0],
-                    "dd-MMM-yyyy"
-                ),
+                calDue: dueDate(),
             };
         });
-        console.log(certs);
+        // console.log(certs);
         return certs;
     } catch (error) {
         console.error("Error:", error);

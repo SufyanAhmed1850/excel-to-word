@@ -16,6 +16,12 @@ import {
 } from "docx";
 import simleTable from "./src/table/simpleTable.js";
 import flowMeterTable from "./src/table/flowMeterTable.js";
+import safetyValveTable from "./src/table/safetyValveTable.js";
+import tempHumTable from "./src/table/tempHumTable.js";
+import elecValveActuatorTable from "./src/table/elecValveActuatorTable.js";
+import fourSimilarTable from "./src/table/fourSimilar.js";
+import condMeterTable from "./src/table/conductivityMeterTable.js";
+import phMeterTable from "./src/table/phMeterTable.js";
 
 const pathToSaveWord = "./dist/Certificates.docx";
 let certs;
@@ -59,9 +65,17 @@ const getChildren = (answer) => {
     const paragraphs = [];
     certs.forEach((cert, i) => {
         const customerEq = cert.equipment.toLowerCase();
+        const getLimit = () => {
+            if (customerEq.includes("flow meter")) {
+                return "\tLine Size:\t";
+            } else if (customerEq.includes("safety valve")) {
+                return "\tSet Pressure:\t";
+            } else {
+                return "\tRange:\t\t";
+            }
+        };
         const meta = getMaster(cert.equipment, cert.maxRead, cert.mode);
         const condition = meta.condition;
-        const master = meta.master;
         const getFreq = (fr) => {
             let freq = fr === "cal" ? "Calibration" : "Verification";
             let sig = fr === "cal" ? "CALIBRATED" : "VERIFIED";
@@ -184,9 +198,7 @@ const getChildren = (answer) => {
                                 leader: PositionalTabLeader.NONE,
                             }),
                             new TextRun({
-                                text: customerEq.includes("flow meter")
-                                    ? "\tLine Size:\t"
-                                    : "\tRange:\t\t",
+                                text: getLimit(),
                                 font: "Calibri",
                             }),
                         ],
@@ -288,104 +300,118 @@ const getChildren = (answer) => {
                     before: 120,
                     lineRule: LineRuleType.EXACTLY,
                 },
-            }),
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: `  ${master.equipName}`,
-                        bold: true,
-                        font: "Calibri",
-                    }),
-                ],
-                border: border(),
-            }),
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: "\tMake:\t\t",
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        text: master.model,
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        children: [
-                            new PositionalTab({
-                                alignment: PositionalTabAlignment.CENTER,
-                                relativeTo: PositionalTabRelativeTo.INDENT,
-                                leader: PositionalTabLeader.NONE,
-                            }),
-                            new TextRun({
-                                text: "\tSerial No:\t",
-                                font: "Calibri",
-                            }),
-                        ],
-                    }),
-                    new TextRun({ text: master.serial, font: "Calibri" }),
-                ],
-                border: border(),
-            }),
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: "\tTraceability:\t",
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        text: master.trac,
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        children: [
-                            new PositionalTab({
-                                alignment: PositionalTabAlignment.CENTER,
-                                relativeTo: PositionalTabRelativeTo.INDENT,
-                                leader: PositionalTabLeader.NONE,
-                            }),
-                            new TextRun({
-                                text: "\tId No:\t\t",
-                                font: "Calibri",
-                            }),
-                        ],
-                    }),
-                    new TextRun({
-                        text: master.idNo,
-                        font: "Calibri",
-                    }),
-                ],
-                border: border(),
-            }),
-            new Paragraph({
-                children: [
-                    new TextRun({
-                        text: "\tCal. Date:\t",
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        text: master.calDate,
-                        font: "Calibri",
-                    }),
-                    new TextRun({
-                        children: [
-                            new PositionalTab({
-                                alignment: PositionalTabAlignment.CENTER,
-                                relativeTo: PositionalTabRelativeTo.INDENT,
-                                leader: PositionalTabLeader.NONE,
-                            }),
-                            new TextRun({
-                                text: "\tCal. Due Date:\t",
-                                font: "Calibri",
-                            }),
-                        ],
-                    }),
-                    new TextRun({
-                        text: master.calDueDate,
-                        font: "Calibri",
-                    }),
-                ],
-                border: border(),
-            }),
+            })
+        );
+
+        // --------------- Master Equipment Start ---------------
+        meta.master.forEach((master) => {
+            // console.log(master);
+            paragraphs.push(
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: `  ${master.equipName}`,
+                            bold: true,
+                            font: "Calibri",
+                        }),
+                    ],
+                    border: border(),
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: "\tMake:\t\t",
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            text: master.model,
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            children: [
+                                new PositionalTab({
+                                    alignment: PositionalTabAlignment.CENTER,
+                                    relativeTo: PositionalTabRelativeTo.INDENT,
+                                    leader: PositionalTabLeader.NONE,
+                                }),
+                                new TextRun({
+                                    text: "\tSerial No:\t",
+                                    font: "Calibri",
+                                }),
+                            ],
+                        }),
+                        new TextRun({
+                            text: master.serial,
+                            font: "Calibri",
+                        }),
+                    ],
+                    border: border(),
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: "\tTraceability:\t",
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            text: master.trac,
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            children: [
+                                new PositionalTab({
+                                    alignment: PositionalTabAlignment.CENTER,
+                                    relativeTo: PositionalTabRelativeTo.INDENT,
+                                    leader: PositionalTabLeader.NONE,
+                                }),
+                                new TextRun({
+                                    text: "\tId No:\t\t",
+                                    font: "Calibri",
+                                }),
+                            ],
+                        }),
+                        new TextRun({
+                            text: master.idNo,
+                            font: "Calibri",
+                        }),
+                    ],
+                    border: border(),
+                }),
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: "\tCal. Date:\t",
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            text: master.calDate,
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            children: [
+                                new PositionalTab({
+                                    alignment: PositionalTabAlignment.CENTER,
+                                    relativeTo: PositionalTabRelativeTo.INDENT,
+                                    leader: PositionalTabLeader.NONE,
+                                }),
+                                new TextRun({
+                                    text: "\tCal. Due Date:\t",
+                                    font: "Calibri",
+                                }),
+                            ],
+                        }),
+                        new TextRun({
+                            text: master.calDueDate,
+                            font: "Calibri",
+                        }),
+                    ],
+                    border: border(),
+                })
+            );
+        });
+        // --------------- Master Equipment End ---------------
+
+        paragraphs.push(
             new Paragraph({
                 children: [
                     new TextRun({
@@ -444,10 +470,17 @@ const getChildren = (answer) => {
             })
         );
         if (cert.calDue !== "OUT OF ORDER") {
+            let mode = cert.mode;
+            let maxNumber;
+            if (cert.maxRead.includes(" | ")) {
+                maxNumber = cert.maxRead;
+            } else {
+                maxNumber = +cert.maxRead;
+            }
             const argsToPass = {
                 paragraphs,
-                maxNumber: +cert.maxRead,
-                mode: cert.mode,
+                maxNumber,
+                mode,
             };
             paragraphs.push(
                 new Paragraph({
@@ -481,7 +514,40 @@ const getChildren = (answer) => {
                 })
             );
             switch (customerEq) {
+                case "pressure safety valve":
+                    safetyValveTable(argsToPass);
+                    break;
+                case "hygrometer":
+                case "digital hygrometer":
+                case "thermo hygrometer":
+                case "data logger":
+                    tempHumTable(argsToPass);
+                    break;
+                case "conductivity meter":
+                case "tds meter":
+                    condMeterTable(argsToPass);
+                    break;
+                case "ph meter":
+                    phMeterTable(argsToPass);
+                    break;
+                case "electric valve actuator":
+                    elecValveActuatorTable(argsToPass);
+                    break;
+                case "sound meter":
+                case "thermometer":
+                case "humidity sensor":
+                case "volt meter":
+                case "ampere meter":
+                    fourSimilarTable(argsToPass);
+                    break;
+                case "volt & ampere meter":
                 case "flow meter":
+                case "ultrasonic flow meter":
+                case "air flow meter":
+                case "gas flow meter":
+                case "steam flow meter":
+                case "water flow meter":
+                case "oil flow meter":
                     flowMeterTable(argsToPass);
                     break;
                 default:
@@ -515,8 +581,6 @@ const getChildren = (answer) => {
                     }),
                 ],
             }),
-            new Paragraph(""),
-            new Paragraph(""),
             new Paragraph(""),
             new Paragraph(""),
             new Paragraph(""),
@@ -568,7 +632,7 @@ const processDoc = async (answer) => {
                                 height: 15840, // Letter size height in TWIPs
                             },
                             margin: {
-                                top: 2592,
+                                top: 2400,
                                 right: 720,
                                 bottom: 720,
                                 left: 720,

@@ -1,14 +1,15 @@
 {
-    "name": "word",
+    "name": "calibration-certificate",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "type": "module",
     "scripts": {
         "start": "node index.js",
+        "dev": "node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "",
+    "author": "SufyanAhmed1850",
     "license": "ISC",
     "dependencies": {
         "date-fns": "^3.6.0",

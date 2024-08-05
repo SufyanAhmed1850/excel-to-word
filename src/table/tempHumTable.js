@@ -9,29 +9,49 @@ import {
     VerticalAlign,
 } from "docx";
 
-const simleTable = ({ paragraphs, maxNumber, mode }) => {
-    const generateRandomNumbers = () => {
-        let randomNumbers = [];
-        for (let i = 1; i <= 5; i++) {
-            let randomNumber = (maxNumber / 5) * i;
-            if (maxNumber > 5) {
-                randomNumber = Math.round(randomNumber);
-                randomNumber += ".0";
-            } else {
-                randomNumber = randomNumber.toFixed(1);
-            }
-            if (i < 5) {
-                randomNumbers.push(randomNumber);
-            } else {
-                if (maxNumber % 1 === 0) {
-                    maxNumber += ".0";
-                }
-                randomNumbers.push(maxNumber);
-            }
+const tempHumTable = ({ paragraphs, maxNumber, mode }) => {
+    let splitMaxNum = maxNumber.split(" | ");
+    let temp = +splitMaxNum[0];
+    let hum = +splitMaxNum[1];
+    const generateRandomNumbers = (max) => {
+        let randomUpOrDowm;
+        if (mode.split(" | ")[0].split(" ")[3] === "°C") {
+            randomUpOrDowm = max * 0.6;
+        } else {
+            randomUpOrDowm = max * 0.15;
         }
-        return randomNumbers;
+        let results = [];
+        for (let i = 1; i <= 3; i++) {
+            let randomNumber = Math.random() * randomUpOrDowm;
+            if (Math.round(Math.random() * 1 + 1) == 1) {
+                randomNumber = max + randomNumber;
+            } else {
+                randomNumber = max - randomNumber;
+            }
+
+            let instrument = randomNumber;
+            if (Math.round(Math.random() * 4 + 1) == 2) {
+                if (Math.round(Math.random() * 1 + 1) == 1) {
+                    instrument = randomNumber + (Math.random() * 0.2 + 0.1);
+                } else {
+                    instrument = randomNumber - (Math.random() * 0.2 + 0.1);
+                }
+            }
+
+            randomNumber = randomNumber.toFixed(1);
+            instrument = instrument.toFixed(1);
+            let err = (instrument - randomNumber).toFixed(1);
+
+            results.push({
+                master: randomNumber.toString(),
+                instrument: instrument.toString(),
+                err: err.toString(),
+            });
+        }
+        return results;
     };
-    let numbers = generateRandomNumbers().map((num) => num.toString());
+    let tempResult = generateRandomNumbers(temp);
+    let humResult = generateRandomNumbers(hum);
     paragraphs.push(
         new Table({
             columnWidths: [2420, 2160, 3024, 1606, 1606],
@@ -177,14 +197,14 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: mode,
+                                            text: mode.split(" | ")[0],
                                             font: "Calibri",
                                         }),
                                     ],
                                     alignment: AlignmentType.CENTER,
                                 }),
                             ],
-                            rowSpan: 5,
+                            rowSpan: 3,
                             verticalAlign: VerticalAlign.CENTER,
                         }),
                         new TableCell({
@@ -196,7 +216,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[0],
+                                            text: tempResult[0].master,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -215,7 +235,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[0],
+                                            text: tempResult[0].instrument,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -234,7 +254,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: tempResult[0].err,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -277,7 +297,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[1],
+                                            text: tempResult[1].master,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -296,7 +316,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[1],
+                                            text: tempResult[1].instrument,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -315,7 +335,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: tempResult[1].err,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -358,7 +378,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[2],
+                                            text: tempResult[2].master,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -377,7 +397,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[2],
+                                            text: tempResult[2].instrument,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -396,7 +416,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: tempResult[2].err,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -427,9 +447,42 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                         }),
                     ],
                 }),
-                // < --------------------------4-4-4------------------------------ >
+                // < --------------------------EMPTY------------------------------ >
                 new TableRow({
                     children: [
+                        new TableCell({
+                            width: {
+                                size: 2420,
+                                type: WidthType.DXA,
+                            },
+                            children: [new Paragraph("")],
+                            columnSpan: 5,
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------'1'-'1'-'1'------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2420,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: mode.split(" | ")[1],
+                                            font: "Calibri",
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            rowSpan: 3,
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
                         new TableCell({
                             width: {
                                 size: 2160,
@@ -439,7 +492,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[3],
+                                            text: humResult[0].master,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -458,7 +511,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[3],
+                                            text: humResult[0].instrument,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -477,7 +530,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: humResult[0].err,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -508,7 +561,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                         }),
                     ],
                 }),
-                // < --------------------------5-5-5------------------------------ >
+                // < --------------------------'2'-'2'-'2'------------------------------ >
                 new TableRow({
                     children: [
                         new TableCell({
@@ -520,7 +573,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[4],
+                                            text: humResult[1].master,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -539,7 +592,7 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: numbers[4],
+                                            text: humResult[1].instrument,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -558,7 +611,88 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
                                 new Paragraph({
                                     children: [
                                         new TextRun({
-                                            text: "0.0",
+                                            text: humResult[1].err,
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "Pass",
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                    ],
+                }),
+                // < --------------------------'3'-'3'-'3'------------------------------ >
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 2160,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: humResult[2].master,
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 3024,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: humResult[2].instrument,
+                                            font: "Calibri",
+                                            size: 19,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.CENTER,
+                                }),
+                            ],
+                            verticalAlign: VerticalAlign.CENTER,
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 1606,
+                                type: WidthType.DXA,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: humResult[2].err,
                                             font: "Calibri",
                                             size: 19,
                                         }),
@@ -593,4 +727,4 @@ const simleTable = ({ paragraphs, maxNumber, mode }) => {
         })
     );
 };
-export default simleTable;
+export default tempHumTable;
